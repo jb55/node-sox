@@ -108,7 +108,7 @@ Transcode.prototype.start = function() {
   identify(this.inputFile, function(err, src) {
     if (err) {
       self.emit('error', err);
-      return
+      return;
     }
 
     self.emit('src', src);
@@ -117,14 +117,22 @@ Transcode.prototype.start = function() {
       '--guard',
       '--magic',
       '--show-progress',
-      self.inputFile,
-      '-r', self.options.sampleRate,
-      '-t', self.options.format,
-      '-C', Math.round(self.options.bitRate / 1024) +
-            self.options.compressionQuality,
-      '-c', self.options.channelCount,
-      self.outputFile
+      self.inputFile
     ];
+
+    if (self.options.sampleRate)
+      args.push('-r', self.options.sampleRate);
+    if (self.options.format)
+      args.push('-t', self.options.format);
+    if (self.options.bitRate && self.options.compressionQuality) {
+      var q = Math.round(self.options.bitRate / 1024) + self.options.compressionQuality;
+      args.push('-C', q);
+    }
+    if (self.options.channelCount)
+      args.push('-c', self.options.channelCount);
+
+    args.push(self.outputFile);
+
     var bin = childProcess.spawn('sox', args);
     var stdout = "";
     bin.stdout.setEncoding('utf8');
