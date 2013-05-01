@@ -92,13 +92,6 @@ function Transcode(inputFile, outputFile, options) {
 
   // defaults
   this.options = this.options || {};
-  this.options.sampleRate = this.options.sampleRate || 44100;
-  this.options.format = this.options.format || 'mp3';
-  this.options.channelCount = this.options.channelCount || 2;
-  this.options.bitRate = this.options.bitRate ? parseInt(this.options.bitRate, 10) : 192 * 1024;
-  if (this.options.format === 'mp3') {
-    this.options.compressionQuality = this.options.compressionQuality || 5;
-  }
 }
 
 util.inherits(Transcode, EventEmitter);
